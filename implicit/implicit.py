@@ -13,6 +13,7 @@ class ALS(object):
     def __init__(self,
                  num_factors=40,
                  regularization=0.01,
+                 alpha=1.0,
                  iterations=15,
                  use_native=True,
                  num_threads=0,
@@ -32,6 +33,7 @@ class ALS(object):
         """
         self.num_factors = num_factors
         self.regularization = regularization
+        self.alpha = alpha
         self.iterations = iterations
         self.use_native = use_native
         self.num_threads = num_threads
@@ -63,6 +65,9 @@ class ALS(object):
     def fit_partial(self, Cui):
         """Continue fitting model"""
 
+        # Scaling
+        Cui = Cui.copy()
+        Cui.data *= self.alpha
         Cui, Ciu = Cui.tocsr(), Cui.T.tocsr()
 
         for iteration in range(self.iterations):
